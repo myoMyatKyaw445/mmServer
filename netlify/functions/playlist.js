@@ -3,9 +3,11 @@ let cachedM3U = null;
 let cacheTime = 0;
 const CACHE_TTL = 10000; // 10 စက္ကန့်
 
+// GitHub API v3 Endpoint (Cache Bypass ဖြစ်အောင်)
+const API_URL = 'https://api.github.com/repos/myoMyatKyaw445/m_live_data/contents/fmp_data.json';
+
 exports.handler = async (event, context) => {
   const now = Date.now();
-  const apiUrl = 'https://raw.githubusercontent.com/myoMyatKyaw445/m_live_data/refs/heads/main/fmp_data.json';
 
   // Cache 10 စက္ကန့် မကျော်သေးရင် Cache ကနေ ပြန်ပေးမယ်
   if (cachedM3U && (now - cacheTime < CACHE_TTL)) {
@@ -22,16 +24,19 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    console.log(`[${new Date().toISOString()}] Fetching fresh data from API...`);
-    const response = await fetch(apiUrl, {
+    console.log(`[${new Date().toISOString()}] Fetching fresh data from GitHub API...`);
+    
+    // GitHub API v3 ကို ခေါ်မယ် (Cache Bypass)
+    const response = await fetch(API_URL, {
       headers: { 
         'User-Agent': 'IPTV-Proxy/1.0',
-        'Cache-Control': 'no-cache'
+        'Accept': 'application/vnd.github.v3.raw', // Raw content ရအောင်
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
       }
     });
 
     if (!response.ok) {
-      throw new Error(`API responded with status ${response.status}`);
+      throw new Error(`GitHub API responded with status ${response.status}`);
     }
 
     const data = await response.json();
