@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 // API ကို အကြိမ်ကြိမ်မခေါ်ရအောင် 30 စက္ကန့် Cache ထားမယ်
 const cache = new NodeCache({ stdTTL: 30 });
 
-// သင်ပေးထားတဲ့ JSON API URL
-const API_URL = 'https://raw.githubusercontent.com/myoMyatKyaw445/m_live_data/refs/heads/main/fmp_data.json';
+// ⚠️ မင်းပေးထားတဲ့ API URL အသစ် (Raw URL)
+const API_URL = 'https://raw.githubusercontent.com/appeton778-coder/mmServer/main/mmserver_data.json';
 
 // ---------------------------------------------------
 // JSON Data ကို M3U Playlist အဖြစ် ပြောင်းလဲပေးမယ့် Function
@@ -18,29 +18,23 @@ function generateM3U(matches) {
   m3u += '#EXTENC:UTF-8\n'; // မြန်မာစာ အမှန်ပြဖို့ UTF-8 သတ်မှတ်ခြင်း
 
   for (const match of matches) {
-    // 1. Live ဖြစ်နေတဲ့ ပွဲတွေကိုပဲ ယူချင်ရင် အောက်က line ကို ဖြုတ်ပါ (Uncomment လုပ်ပါ)
+    // Live ဖြစ်နေတဲ့ ပွဲတွေကိုပဲ ယူချင်ရင် အောက်က line ကို ဖြုတ်ပါ (Uncomment လုပ်ပါ)
     // if (match.match_status === false) continue;
 
-    // 2. လိုအပ်တဲ့ Data တွေကို ဆွဲထုတ်ခြင်း
     const home = match.home_name || 'Home Team';
     const away = match.away_name || 'Away Team';
     const logo = match.home_img || ''; 
     const league = match.league || 'Live Sports';
     const status = match.status || 'LIVE';
     
-    // 3. Stream URL ကို ရှာဖွေခြင်း (links array ရဲ့ ပထမဆုံး element ကိုယူမယ်)
     let streamUrl = '';
     if (match.links && Array.isArray(match.links) && match.links.length > 0) {
       streamUrl = match.links[0].url;
     }
 
-    // URL မပါရင် ဒီ match ကို ကျော်သွားမယ်
     if (!streamUrl) continue;
 
-    // 4. IPTV Player မှာ ပေါ်မယ့် နာမည်ကို ဖန်တီးခြင်း
     const displayName = `[${league}] ${home} vs ${away} | ${status}`;
-
-    // 5. EXTINF Line နဲ့ Stream URL ကို ပေါင်းထည့်ခြင်း
     m3u += `#EXTINF:-1 tvg-logo="${logo}" group-title="${league}",${displayName}\n`;
     m3u += `${streamUrl}\n`;
   }
@@ -53,7 +47,6 @@ function generateM3U(matches) {
 // ---------------------------------------------------
 app.get('/playlist.m3u', async (req, res) => {
   try {
-    // Cache ထဲမှာရှိရင် Cache ကနေပြန်ပေးမယ်
     let cachedM3U = cache.get('m3u_playlist');
     
     if (cachedM3U) {
@@ -73,10 +66,8 @@ app.get('/playlist.m3u', async (req, res) => {
     const data = await response.json();
     const m3uContent = generateM3U(data);
 
-    // Cache ထဲကို 30 စက္ကန့် သိမ်းလိုက်ပါ
     cache.set('m3u_playlist', m3uContent);
 
-    // IPTV Player တွေ Cache မသိမ်းအောင် Header တွေ ထည့်ပေးခြင်း
     res.setHeader('Content-Type', 'audio/x-mpegurl; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     res.setHeader('Pragma', 'no-cache');
@@ -90,7 +81,6 @@ app.get('/playlist.m3u', async (req, res) => {
   }
 });
 
-// Health Check Route
 app.get('/', (req, res) => {
   res.json({ 
     status: 'OK', 

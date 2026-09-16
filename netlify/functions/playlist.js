@@ -3,9 +3,6 @@ let cachedM3U = null;
 let cacheTime = 0;
 const CACHE_TTL = 10000; // 10 စက္ကန့်
 
-// GitHub API v3 Endpoint (Cache Bypass ဖြစ်အောင်)
-const API_URL = 'https://api.github.com/repos/myoMyatKyaw445/m_live_data/contents/fmp_data.json';
-
 exports.handler = async (event, context) => {
   const now = Date.now();
 
@@ -24,13 +21,16 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    console.log(`[${new Date().toISOString()}] Fetching fresh data from GitHub API...`);
+    console.log(`[${new Date().toISOString()}] Fetching fresh data with Cache Bypass...`);
     
-    // GitHub API v3 ကို ခေါ်မယ် (Cache Bypass)
+    // ⚠️ CACHE BUSTING: API v3 နဲ့ Timestamp ထည့်ထားခြင်း (မင်းပေးတဲ့ Repo အသစ်)
+    const timestamp = Date.now();
+    const API_URL = `https://api.github.com/repos/appeton778-coder/mmServer/contents/mmserver_data.json?t=${timestamp}`;
+
     const response = await fetch(API_URL, {
       headers: { 
         'User-Agent': 'IPTV-Proxy/1.0',
-        'Accept': 'application/vnd.github.v3.raw', // Raw content ရအောင်
+        'Accept': 'application/vnd.github.v3.raw', // Raw JSON content ကို တိုက်ရိုက်ယူရန်
         'Cache-Control': 'no-cache, no-store, must-revalidate'
       }
     });
