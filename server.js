@@ -7,8 +7,8 @@ const PORT = process.env.PORT || 3000;
 // API ကို အကြိမ်ကြိမ်မခေါ်ရအောင် 30 စက္ကန့် Cache ထားမယ်
 const cache = new NodeCache({ stdTTL: 30 });
 
-// ⚠️ မင်းပေးထားတဲ့ API URL အသစ် (Raw URL)
-const API_URL = 'https://raw.githubusercontent.com/appeton778-coder/mmServer/main/mmserver_data.json';
+// ⚠️ ပြင်ဆင်ထားသော API URL (fmp_data.json ကို ပြောင်းထားပါပြီ)
+const API_URL = 'https://raw.githubusercontent.com/appeton778-coder/mmServer/refs/heads/main/fmp_data.json';
 
 // ---------------------------------------------------
 // JSON Data ကို M3U Playlist အဖြစ် ပြောင်းလဲပေးမယ့် Function
@@ -18,7 +18,7 @@ function generateM3U(matches) {
   m3u += '#EXTENC:UTF-8\n'; // မြန်မာစာ အမှန်ပြဖို့ UTF-8 သတ်မှတ်ခြင်း
 
   for (const match of matches) {
-    // Live ဖြစ်နေတဲ့ ပွဲတွေကိုပဲ ယူချင်ရင် အောက်က line ကို ဖြုတ်ပါ (Uncomment လုပ်ပါ)
+    // ⚠️ match_status ကို စစ်ဆေးခြင်း မရှိပါ။ (မင်းလိုချင်သလို အကုန်ယူထားပါတယ်)
     // if (match.match_status === false) continue;
 
     const home = match.home_name || 'Home Team';
@@ -32,6 +32,7 @@ function generateM3U(matches) {
       streamUrl = match.links[0].url;
     }
 
+    // URL လုံးဝမပါမှသာ ကျော်ပါမယ်
     if (!streamUrl) continue;
 
     const displayName = `[${league}] ${home} vs ${away} | ${status}`;

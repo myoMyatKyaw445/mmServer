@@ -21,7 +21,8 @@ exports.handler = async (event, context) => {
 
   try {
     const timestamp = Date.now();
-    const API_URL = `https://raw.githubusercontent.com/appeton778-coder/mmServer/main/mmserver_data.json?t=${timestamp}`;
+    // ✅ အမှန်တကယ် ဖြစ်သင့်တဲ့ URL (fmp_data.json)
+    const API_URL = `https://raw.githubusercontent.com/appeton778-coder/mmServer/refs/heads/main/fmp_data.json?t=${timestamp}`;
 
     const response = await fetch(API_URL, {
       headers: { 
@@ -72,7 +73,7 @@ function generateM3U(matches) {
   let m3u = '#EXTM3U\n#EXTENC:UTF-8\n';
 
   for (const match of matches) {
-    // ⚠️ match_status ကို လုံးဝ စစ်ဆေးခြင်း မရှိပါ။ အကုန်လုံးကို ယူပါမယ်။
+    // match_status ကို လုံးဝ စစ်ဆေးခြင်း မရှိပါ။ အကုန်လုံးကို ယူပါမယ်။
 
     const home = match.home_name || 'Home Team';
     const away = match.away_name || 'Away Team';
@@ -85,7 +86,7 @@ function generateM3U(matches) {
       streamUrl = match.links[0].url;
     }
 
-    // ⚠️ M3U ဖိုင်မှန်ကန်ဖို့ URL မရှိတဲ့ ပွဲကိုသာ ကျော်ပါမယ်။ (URL မပါရင် IPTV App က Error တက်မှာ ဖြစ်လို့ပါ)
+    // URL မရှိတဲ့ ပွဲကိုသာ ကျော်ပါမယ် (M3U စနစ်အရ URL မရှိရင် Error တက်မှာ ဖြစ်လို့ပါ)
     if (!streamUrl) {
       console.log(`⚠️ Skipped match without URL: ${home} vs ${away}`);
       continue;
