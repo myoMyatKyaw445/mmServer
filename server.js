@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3000;
 const cache = new NodeCache({ stdTTL: 30 });
 
 // ⚠️ ပြင်ဆင်ထားသော API URL (fmp_data.json ကို ပြောင်းထားပါပြီ)
-const API_URL = 'https://raw.githubusercontent.com/appeton778-coder/mmServer/refs/heads/main/fmp_data.json';
+const API_URL = 'https://raw.githubusercontent.com/appeton778-coder/mmServer/refs/heads/main/mmser_data.json';
 
 // ---------------------------------------------------
 // JSON Data ကို M3U Playlist အဖြစ် ပြောင်းလဲပေးမယ့် Function

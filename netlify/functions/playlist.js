@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
   try {
     const timestamp = Date.now();
     // ✅ အမှန်တကယ် ဖြစ်သင့်တဲ့ URL (fmp_data.json)
-    const API_URL = `https://raw.githubusercontent.com/appeton778-coder/mmServer/refs/heads/main/fmp_data.json?t=${timestamp}`;
+    const API_URL = `https://raw.githubusercontent.com/appeton778-coder/mmServer/refs/heads/main/mmser_data.json?t=${timestamp}`;
 
     const response = await fetch(API_URL, {
       headers: { 
