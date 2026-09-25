@@ -44,7 +44,7 @@ function generateM3U(matches) {
 }
 
 // ---------------------------------------------------
-// Route: /playlist.m3u
+// Route: /playlist.m3u8
 // ---------------------------------------------------
 app.get('/playlist.m3u', async (req, res) => {
   try {
